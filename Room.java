@@ -71,9 +71,9 @@ public class Room {
                 case "go":
                     this.go(player, action[1]);
                     break;
-                // case "check":
-                //     this.check(action[1]);
-                //     break;
+                case "check":
+                    this.check(action[1]);
+                    break;
                 case "take":
                     this.take(player, action[1]);
                     break;
@@ -85,6 +85,9 @@ public class Room {
                 //     break;
                 // case "push":
                 //     this.push(action[1]);
+                // case "use":
+                //     this.use(action[1]);
+                //     break;
                 default:
                     System.out.println("Your action couldn't be recognized, please try again");
                     break;
@@ -92,7 +95,7 @@ public class Room {
         }
     }
 
-    public void help() {
+    private void help() {
         System.out.println("All commands are either 1 or 2 words, the game will not except longer commands");
         System.out.println("Here are the commands you currently have access to:");
         System.out.println("  help (opens this menu)");
@@ -116,7 +119,7 @@ public class Room {
         System.out.println(this.description);
     }
 
-    public void go(Player player, String direction) {
+    private void go(Player player, String direction) {
         boolean movedThisTurn = false;
         movedThisTurn = goDirection(player, direction, "north", northRoom);
         movedThisTurn = goDirection(player, direction, "south", southRoom) || movedThisTurn;
@@ -136,24 +139,37 @@ public class Room {
         return false;
     }
 
-    public void take(Player player, String item) {
+    private void check(String itemName) {
         int index = -1;
         for(int i=0; i<this.itemsInRoom.size(); i++) {
-            if(this.itemsInRoom.get(i).name.toLowerCase().equals(item)) {
+            if(this.itemsInRoom.get(i).name.toLowerCase().equals(itemName)) {
+                index = i;
+            }
+        }
+        if(index != -1) {
+            System.out.println(itemName);
+            System.out.println(this.itemsInRoom.get(index).description);
+        }
+    }
+
+    private void take(Player player, String itemName) {
+        int index = -1;
+        for(int i=0; i<this.itemsInRoom.size(); i++) {
+            if(this.itemsInRoom.get(i).name.toLowerCase().equals(itemName)) {
                 index = i;
             }
         }
         if(index != -1 && this.itemsInRoom.get(index) instanceof Collectable) {
-            player.inventory.add(new Collectable(item, this.itemsInRoom.get(index).description));
+            player.inventory.add(new Collectable(itemName, this.itemsInRoom.get(index).description));
             this.itemsInRoom.remove(index);
-            System.out.println("You picked up the "+item+" and put it in your inventory");
+            System.out.println("You picked up the "+itemName+" and put it in your inventory");
         }
         else {
-            System.out.println("Cannot take " +item);
+            System.out.println("Cannot take " +itemName);
         }
     }
 
-    public void debugCheck() {
+    private void debugCheck() {
         System.out.println("You are in the "+this.name);
         System.out.println(this.description);
         System.out.println("For testing: there are these items:");
