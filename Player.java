@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 
 public class Player {
-    protected ArrayList<Collectable> inventory;
+    protected ArrayList<Item> inventory;
     public Room currentRoom;
+    public int score = 0;
 
-    public Player(Room startingRoom) {
+    public Player() {
         this.inventory = new ArrayList<>();
-        this.currentRoom = startingRoom;
     }
 
     public void checkInventory() {

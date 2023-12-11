@@ -9,14 +9,12 @@ __Current List Of Implemented Inputs__
 
 [x]go
 
-[ ]climb
+[x]climb
 
 [x]check
 
 [x]take
 
 [ ]use
-
-[ ]push
 
 [x]move

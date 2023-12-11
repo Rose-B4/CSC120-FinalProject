@@ -4,41 +4,45 @@ import java.util.Arrays;
 public class Room {
     public String name;
     public String description;
-    ArrayList<Item> itemsInRoom;
-    ArrayList<String> availableActions;
+    public ArrayList<Item> itemsInRoom;
+    public ArrayList<String> availableActions;
+    public ArrayList<String> usableItems;
 
-    Room northRoom;
-    Room southRoom;
-    Room eastRoom;
-    Room westRoom;
+    public Room northRoom;
+    public Room southRoom;
+    public Room eastRoom;
+    public Room westRoom;
+    public Room roomAbove;
+    public Room roomBelow;
 
-    Room roomAbove;
-    Room roomBelow;
+    public boolean canGoNorth = false;
+    public boolean canGoSouth = false;
+    public boolean canGoEast = false;
+    public boolean canGoWest = false;
+    public boolean canGoUp = false;
+    public boolean canGoDown = false;
+
 
     public Room(String name, String description) {
         this.name = name;
         this.description = description;
-        this.itemsInRoom = new ArrayList<>();
+        this.itemsInRoom = new ArrayList<Item>();
         this.availableActions = new ArrayList<String>() {{
             add("help");
             add("look");
             add("bag");
             add("go");
+            add("move");
             add("check");
             add("take");
             add("climb");
         }};
+        this.usableItems = new ArrayList<String>();
     }
     public Room(String name, String description, Item[] items) {
         this(name, description);
         this.itemsInRoom = new ArrayList<>(Arrays.asList(items));
         
-    }
-    public Room(String name, String description, Item[] items, String[] extraActions) {
-        this(name, description, items);
-        for(int i=0; i<extraActions.length; i++) {
-            this.availableActions.add(extraActions[i]);
-        }
     }
 
     public void takeAction(Player player, String[] action) {
@@ -72,19 +76,17 @@ public class Room {
                     this.go(player, action[1]);
                     break;
                 case "check":
-                    this.check(action[1]);
+                    this.check(player, action[1]);
                     break;
                 case "take":
                     this.take(player, action[1]);
                     break;
-                // case "climb":
-                //     this.climb(action[1]);
-                //     break;
-                // case "move":
-                //     this.move(action[1]);
-                //     break;
-                // case "push":
-                //     this.push(action[1]);
+                case "climb":
+                    this.go(player, action[1]);
+                    break;
+                case "move":
+                    this.move(player, action[1]);
+                    break;
                 // case "use":
                 //     this.use(action[1]);
                 //     break;
@@ -97,7 +99,7 @@ public class Room {
 
     private void help() {
         System.out.println("All commands are either 1 or 2 words, the game will not except longer commands");
-        System.out.println("Here are the commands you currently have access to:");
+        System.out.println("Here are the commands you can currently currently use:");
         System.out.println("  help (opens this menu)");
         System.out.println("  look (gives a description of the current room)");
         System.out.println("  bag (displays your current inventory)");
@@ -107,10 +109,12 @@ public class Room {
         System.out.println("  take <item name> (adds the inputted item to your inventory)");
         
         if(this.availableActions.contains("move")) {
-            System.out.println("  move <item> (allows you to move the inputted item out of the way)");
+            System.out.println("  move <item name> (allows you to move the inputted item out of the way)");
         }
-        if(this.availableActions.contains("push")) {
-            System.out.println(  "push <item> (pushes the inputted item off of a ledge)");
+        System.out.println();
+        System.out.println("Items in current room:");
+        for(int i=0; i<this.itemsInRoom.size(); i++) {
+            System.out.println(this.itemsInRoom.get(i).name);
         }
     }
 
@@ -121,16 +125,18 @@ public class Room {
 
     private void go(Player player, String direction) {
         boolean movedThisTurn = false;
-        movedThisTurn = goDirection(player, direction, "north", northRoom);
-        movedThisTurn = goDirection(player, direction, "south", southRoom) || movedThisTurn;
-        movedThisTurn = goDirection(player, direction, "east", eastRoom) || movedThisTurn;
-        movedThisTurn = goDirection(player, direction, "west", westRoom) || movedThisTurn;
+        movedThisTurn = goDirection(player, direction, "north", northRoom, canGoNorth);
+        movedThisTurn = goDirection(player, direction, "south", southRoom, canGoSouth) || movedThisTurn;
+        movedThisTurn = goDirection(player, direction, "east", eastRoom, canGoEast) || movedThisTurn;
+        movedThisTurn = goDirection(player, direction, "west", westRoom, canGoWest) || movedThisTurn;
+        movedThisTurn = goDirection(player, direction, "up", roomAbove, canGoUp) || movedThisTurn;
+        movedThisTurn = goDirection(player, direction, "down", roomBelow, canGoDown) || movedThisTurn;
         if(movedThisTurn == false) {
             System.out.println("Cannot go " + direction);
         }
     }
-    private boolean goDirection(Player player, String inputDirection, String goDirection, Room targetRoom) {
-        if(inputDirection.equals(goDirection) && targetRoom!=null) {
+    private boolean goDirection(Player player, String inputDirection, String goDirection, Room targetRoom, boolean canMove) {
+        if(inputDirection.equals(goDirection) && targetRoom!=null && canMove) {
             System.out.println("You left "+this.name);
             player.currentRoom = targetRoom;
             player.currentRoom.displayRoom();
@@ -139,27 +145,30 @@ public class Room {
         return false;
     }
 
-    private void check(String itemName) {
-        int index = -1;
-        for(int i=0; i<this.itemsInRoom.size(); i++) {
-            if(this.itemsInRoom.get(i).name.toLowerCase().equals(itemName)) {
-                index = i;
-            }
-        }
-        if(index != -1) {
-            System.out.println(itemName);
+    private void check(Player player, String itemName) {
+        int index = this.searchForItem(itemName, this.itemsInRoom);
+        if (index != -1) {
             System.out.println(this.itemsInRoom.get(index).description);
+            return;
         }
+
+        index = this.searchForItem(itemName, player.inventory);
+        if (index != -1) {
+            System.out.println(player.inventory.get(index).description);
+            return;
+        }
+
+        System.out.println("Cannot find "+itemName);
     }
 
     private void take(Player player, String itemName) {
-        int index = -1;
-        for(int i=0; i<this.itemsInRoom.size(); i++) {
-            if(this.itemsInRoom.get(i).name.toLowerCase().equals(itemName)) {
-                index = i;
-            }
+        int index = this.searchForItem(itemName, this.itemsInRoom);
+        if (index == -1) {
+            System.out.println("Cannot find "+itemName);
+            return;
         }
-        if(index != -1 && this.itemsInRoom.get(index) instanceof Collectable) {
+
+        if(this.itemsInRoom.get(index) instanceof Collectable) {
             player.inventory.add(new Collectable(itemName, this.itemsInRoom.get(index).description));
             this.itemsInRoom.remove(index);
             System.out.println("You picked up the "+itemName+" and put it in your inventory");
@@ -169,32 +178,51 @@ public class Room {
         }
     }
 
-    private void debugCheck() {
-        System.out.println("You are in the "+this.name);
-        System.out.println(this.description);
-        System.out.println("For testing: there are these items:");
-        for(int i=0; i<this.itemsInRoom.size(); i++) {
-            System.out.println("  "+this.itemsInRoom.get(i).toString());
+    private void move(Player player, String itemName) {
+        int index = this.searchForItem(itemName, this.itemsInRoom);
+        if(index == -1) { 
+            System.out.println("Cannot find "+itemName);
+            return;
         }
-        System.out.println("For testing: there are these actions available:");
-        for(int i=0; i<this.availableActions.size(); i++) {
-            System.out.println("  "+this.availableActions.get(i).toString());
-        }
-        System.out.println();
+        this.itemsInRoom.get(index).move(player, this);
     }
+
+    private int searchForItem(String itemName, ArrayList<Item> items) {
+        int index = -1;
+        for(int i=0; i<items.size(); i++) {
+            if(items.get(i).name.toLowerCase().equals(itemName)) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    // private void debugCheck() {
+    //     System.out.println("You are in the "+this.name);
+    //     System.out.println(this.description);
+    //     System.out.println("For testing: there are these items:");
+    //     for(int i=0; i<this.itemsInRoom.size(); i++) {
+    //         System.out.println("  "+this.itemsInRoom.get(i).toString());
+    //     }
+    //     System.out.println("For testing: there are these actions available:");
+    //     for(int i=0; i<this.availableActions.size(); i++) {
+    //         System.out.println("  "+this.availableActions.get(i).toString());
+    //     }
+    //     System.out.println();
+    // }
 
 
     public static void main(String[] args) {
-        Room centerRoom = new Room("Center Room", "This is a very cool room because....", new Item[]{new Item("Item 0", "This is an item")});
-        Room northRoom = new Room("North Room", "This a very northern room");
-        centerRoom.northRoom = northRoom;
-        northRoom.southRoom = centerRoom;
-        // tRoom.debugCheck();
-        Player player = new Player(centerRoom);
-
-        player.currentRoom.takeAction(player, new String[]{"go","north"});
-        System.out.println();
-        player.currentRoom.takeAction(player, new String[]{"go","south"});
-        // tRoom.help();
+        Main.main(args);
+        // Room centerRoom = new Room("Center Room", "This is a very cool room because....", new Item[]{new Item("Item 0", "This is an item")});
+        // Room northRoom = new Room("North Room", "This a very northern room");
+        // centerRoom.northRoom = northRoom;
+        // northRoom.southRoom = centerRoom;
+        // centerRoom.debugCheck();
+        // Player player = new Player();
+        // player.currentRoom = centerRoom;
+        // player.currentRoom.takeAction(player, new String[]{"go","north"});
+        // System.out.println();
+        // player.currentRoom.takeAction(player, new String[]{"go","south"});
     }
 }

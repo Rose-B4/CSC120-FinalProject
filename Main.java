@@ -29,23 +29,31 @@ public class Main {
         String[] toReturn = input.split(" ");
         return toReturn;
     }
+    /**
+     * Displays the asci art for the logo of the game
+     */
+    public static void displayLogo() {
+        System.out.println("\n"+
+        "░░████░░███░░█░░░░░█████░░░████░░███░░░░░░░░░███░░█░░░█░█████░░████░█████\n"+
+        "░█░░░░░█░░░█░█░░░░░░░█░░░░█░░░░░█░░░█░░░░░░░█░░░█░█░░░█░█░░░░░█░░░░░░░█░░\n"+
+        "░█░░░░░█████░█░░░░░░░█░░░░█░░░░░█░░░█░░░░░░░█░░░█░█░░░█░████░░░███░░░░█░░\n"+
+        "░█░░░░░█░░░█░█░░░░░░░█░░░░█░░░░░█░░░█░░░░░░░█░░█░░█░░░█░█░░░░░░░░░█░░░█░░\n"+
+        "░░████░█░░░█░█████░█████░░░████░░███░░░░░░░░░██░█░░███░░█████░████░░░░█░░\n");
+    }
 
     public static void main(String[] args) {
-        Room centerRoom = new Room("Center Room", "This is a very cool room because....", new Item[]{new Item("Item_0", "This is an item"), new Collectable("Collectable", "This is a collectable")});
-        Room northRoom = new Room("North Room", "This a very northern room");
-        centerRoom.northRoom = northRoom;
-        northRoom.southRoom = centerRoom;
-        Player player = new Player(centerRoom);
-        // player.inventory.add(new Collectable("Item-Name", "Item-Desc"));
+        displayLogo();
+        Player player = new Player();
+        RoomSetup.startSetup(player);
 
         boolean gameOver = false;
         player.currentRoom.displayRoom();
         while(gameOver == false) {
+            System.out.println();
             System.out.print("Looking for user input: ");
             userInput = getInput();
             inputAsList = parseInput(userInput);
             player.currentRoom.takeAction(player, inputAsList);
-            System.out.println();
         }
     }
 }
