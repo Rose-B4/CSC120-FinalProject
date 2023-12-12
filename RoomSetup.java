@@ -25,6 +25,12 @@ public class RoomSetup {
         player.currentRoom = cage;
     }
 
+    /**
+     * A method that links room together from their north and south doors
+     * Also sets the rooms "canGo<direction>" booleans to true
+     * @param northernRoom The room that will end up being to the north
+     * @param southernRoom The room that will end up being to the south
+     */
     private static void linkRoomsNS(Room northernRoom, Room southernRoom) {
         northernRoom.southRoom = southernRoom;
         northernRoom.canGoSouth = true;
@@ -32,6 +38,12 @@ public class RoomSetup {
         southernRoom.canGoNorth = true;
     }
 
+    /**
+     * A method that links room together from their west and east doors
+     * Also sets the rooms "canGo<direction>" booleans to true
+     * @param westernRoom The room that will end up being to the west
+     * @param easternRoom The room that will end up being to the east
+     */
     private static void linkRoomsWE(Room westernRoom, Room easternRoom) {
         westernRoom.eastRoom = easternRoom;
         westernRoom.canGoEast = true;
@@ -39,6 +51,12 @@ public class RoomSetup {
         easternRoom.canGoWest = true;
     }
 
+    /**
+     * A method that links room together vertically
+     * Also sets the rooms "canGo<direction>" booleans to true
+     * @param roomAbove The room that will end up being on top
+     * @param roomBelow The room that will end up being below
+     */
     private static void linkRoomUD(Room roomAbove, Room roomBelow) {
         roomAbove.roomBelow = roomBelow;
         roomAbove.canGoDown = true;

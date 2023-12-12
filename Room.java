@@ -22,7 +22,12 @@ public class Room {
     public boolean canGoUp = false;
     public boolean canGoDown = false;
 
-
+    /**
+     * The default constructor method for the room class
+     * Creates a room with all of default actions that are available in every room
+     * @param name The name of the room that will be displayed when entering
+     * @param description The description of the room that will be displayed when the look command is used
+     */
     public Room(String name, String description) {
         this.name = name;
         this.description = description;
@@ -39,12 +44,25 @@ public class Room {
         }};
         this.usableItems = new ArrayList<String>();
     }
+    /**
+     * An overloaded version of the room constructor, does all of the same things as the default constructor, but takes an array of items that will be available in the room
+     * @param name see default constructor
+     * @param description see default constructor
+     * @param items an array of items that will be added to the room on creation
+     */
     public Room(String name, String description, Item[] items) {
         this(name, description);
         this.itemsInRoom = new ArrayList<>(Arrays.asList(items));
         
     }
 
+    /**
+     * The main method of the room class that will be called
+     * This method is used to take the player's input and convert it into actions
+     * This method is used to call almost every other method in this class
+     * @param player the player's character object
+     * @param action the array of strings that the player inputted
+     */
     public void takeAction(Player player, String[] action) {
         if(action.length > 2) {
             System.out.println("Your input was too long, please try again with a 1 or 2 word input");
@@ -97,6 +115,10 @@ public class Room {
         }
     }
 
+    /**
+     * One of the player's possible inputs called when the player uses "help"
+     * displays all of the available actions and items
+     */
     private void help() {
         System.out.println("All commands are either 1 or 2 words, the game will not except longer commands");
         System.out.println("Here are the commands you can currently currently use:");
@@ -107,10 +129,8 @@ public class Room {
         System.out.println("  climb <direction> (allows you to climb either up or down)");
         System.out.println("  check <item name> (gives a description of the inputted item)");
         System.out.println("  take <item name> (adds the inputted item to your inventory)");
-        
-        if(this.availableActions.contains("move")) {
-            System.out.println("  move <item name> (allows you to move the inputted item out of the way)");
-        }
+        System.out.println("  move <item name> (allows you to move the inputted item out of the way)");
+
         System.out.println();
         System.out.println("Items in current room:");
         for(int i=0; i<this.itemsInRoom.size(); i++) {
@@ -118,11 +138,21 @@ public class Room {
         }
     }
 
+    /**
+     * A method that is used to display the name and description of the room
+     * This is called both when the player enters a new room and when they use "look"
+     */
     public void displayRoom() {
         System.out.println("You are in "+this.name);
         System.out.println(this.description);
     }
 
+    /**
+     * A method that is used to move the player between rooms
+     * This is called when the player uses "go" or "climb"
+     * @param player the player's character object
+     * @param direction the string representing which direction they chose to go
+     */
     private void go(Player player, String direction) {
         boolean movedThisTurn = false;
         movedThisTurn = goDirection(player, direction, "north", northRoom, canGoNorth);
@@ -135,6 +165,17 @@ public class Room {
             System.out.println("Cannot go " + direction);
         }
     }
+    /**
+     * A helper method for go()
+     * This method is used to check whether or not the player is allowed to go in a specific direction
+     * This method will set the player's current room to the new room if the move is successful and displays the new room's information
+     * @param player The player's character object
+     * @param inputDirection The string of the direction the player chose to go
+     * @param goDirection The direction the method is currently checking
+     * @param targetRoom The room the player will end up in if the move is successful
+     * @param canMove Whether or not the player is allowed to move in the inputted direction
+     * @return returns a boolean of whether or not the move was successful
+     */
     private boolean goDirection(Player player, String inputDirection, String goDirection, Room targetRoom, boolean canMove) {
         if(inputDirection.equals(goDirection) && targetRoom!=null && canMove) {
             System.out.println("You left "+this.name);
@@ -145,6 +186,12 @@ public class Room {
         return false;
     }
 
+    /**
+     * A method that displays the information of a specific item
+     * Can check items from both the current room and the player's inventory
+     * @param player The player's character object
+     * @param itemName The name of the item the player would like to inspect
+     */
     private void check(Player player, String itemName) {
         int index = this.searchForItem(itemName, this.itemsInRoom);
         if (index != -1) {
@@ -161,6 +208,12 @@ public class Room {
         System.out.println("Cannot find "+itemName);
     }
 
+    /**
+     * A method that allows the player to take an item from the room and add it to their inventory
+     * The item must be a collectable for the player to be able to take it 
+     * @param player The player's character object
+     * @param itemName The name of the item the player would like to take
+     */
     private void take(Player player, String itemName) {
         int index = this.searchForItem(itemName, this.itemsInRoom);
         if (index == -1) {
@@ -178,6 +231,13 @@ public class Room {
         }
     }
 
+    /**
+     * A method that allows the player to move items in the room
+     * This can be though of more like an interact method, but move makes more sense in the context of this game
+     * If this method is called on a glass object, it will be smashed and the player's score will increase
+     * @param player The player's character object
+     * @param itemName The name of the item the player would like to move
+     */
     private void move(Player player, String itemName) {
         int index = this.searchForItem(itemName, this.itemsInRoom);
         if(index == -1) { 
@@ -187,6 +247,14 @@ public class Room {
         this.itemsInRoom.get(index).move(player, this);
     }
 
+    /**
+     * A helper method for most other methods in this class
+     * Allows other methods to more easily find where an item is in any given inventory (usually the room's item list but sometimes the player's inventory)
+     * @param itemName The name of the item we are searching for
+     * @param items The array list of items that will be searched
+     * @return The index of the desired item in the list
+     * Note: if the index returned is -1 then the item was not found
+     */
     private int searchForItem(String itemName, ArrayList<Item> items) {
         int index = -1;
         for(int i=0; i<items.size(); i++) {
@@ -196,20 +264,6 @@ public class Room {
         }
         return index;
     }
-
-    // private void debugCheck() {
-    //     System.out.println("You are in the "+this.name);
-    //     System.out.println(this.description);
-    //     System.out.println("For testing: there are these items:");
-    //     for(int i=0; i<this.itemsInRoom.size(); i++) {
-    //         System.out.println("  "+this.itemsInRoom.get(i).toString());
-    //     }
-    //     System.out.println("For testing: there are these actions available:");
-    //     for(int i=0; i<this.availableActions.size(); i++) {
-    //         System.out.println("  "+this.availableActions.get(i).toString());
-    //     }
-    //     System.out.println();
-    // }
 
 
     public static void main(String[] args) {
