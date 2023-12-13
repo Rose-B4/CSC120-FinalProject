@@ -58,7 +58,7 @@ public class Item {
         throw new RuntimeException("Item without an overridden onMove() method was moved");
     }
 
-    // public void use() {
-        
-    // }
+    public void use(Player player, Room room) {
+        this.move(player, room);
+    }
 }

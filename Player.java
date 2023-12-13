@@ -12,7 +12,7 @@ public class Player {
     public void checkInventory() {
         System.out.println("Current Inventory:");
         for(int i=0; i< this.inventory.size(); i++) {
-            System.out.println("    "+inventory.get(i));
+            System.out.println("    "+inventory.get(i).name);
         }
     }
     

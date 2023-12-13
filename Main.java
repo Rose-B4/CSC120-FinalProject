@@ -50,7 +50,7 @@ public class Main {
         player.currentRoom.displayRoom();
         while(gameOver == false) {
             System.out.println();
-            System.out.print("Looking for user input: ");
+            System.out.print(">> ");
             userInput = getInput();
             inputAsList = parseInput(userInput);
             player.currentRoom.takeAction(player, inputAsList);

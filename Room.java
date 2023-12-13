@@ -5,8 +5,6 @@ public class Room {
     public String name;
     public String description;
     public ArrayList<Item> itemsInRoom;
-    public ArrayList<String> availableActions;
-    public ArrayList<String> usableItems;
 
     public Room northRoom;
     public Room southRoom;
@@ -32,17 +30,6 @@ public class Room {
         this.name = name;
         this.description = description;
         this.itemsInRoom = new ArrayList<Item>();
-        this.availableActions = new ArrayList<String>() {{
-            add("help");
-            add("look");
-            add("bag");
-            add("go");
-            add("move");
-            add("check");
-            add("take");
-            add("climb");
-        }};
-        this.usableItems = new ArrayList<String>();
     }
     /**
      * An overloaded version of the room constructor, does all of the same things as the default constructor, but takes an array of items that will be available in the room
@@ -66,10 +53,6 @@ public class Room {
     public void takeAction(Player player, String[] action) {
         if(action.length > 2) {
             System.out.println("Your input was too long, please try again with a 1 or 2 word input");
-            return;
-        }
-        if(!availableActions.contains(action[0])) {
-            System.out.println("Your action couldn't be recognized, please try again");
             return;
         }
         if(action.length == 1) {
@@ -99,15 +82,18 @@ public class Room {
                 case "take":
                     this.take(player, action[1]);
                     break;
+                case "drop":
+                    this.drop(player, action[1]);
+                    break;
                 case "climb":
                     this.go(player, action[1]);
                     break;
                 case "move":
                     this.move(player, action[1]);
                     break;
-                // case "use":
-                //     this.use(action[1]);
-                //     break;
+                case "use":
+                    this.use(player, action[1]);
+                    break;
                 default:
                     System.out.println("Your action couldn't be recognized, please try again");
                     break;
@@ -222,13 +208,29 @@ public class Room {
         }
 
         if(this.itemsInRoom.get(index) instanceof Collectable) {
-            player.inventory.add(new Collectable(itemName, this.itemsInRoom.get(index).description));
+            player.inventory.add(this.itemsInRoom.get(index));
             this.itemsInRoom.remove(index);
             System.out.println("You picked up the "+itemName+" and put it in your inventory");
         }
         else {
             System.out.println("Cannot take " +itemName);
         }
+    }
+
+    /**
+     * Allows the player to drop an item in the current room
+     * The dropped item will be added to the items list of the room
+     * @param player The player's character object
+     * @param itemName The name of the item that will be dropped
+     */
+    private void drop(Player player, String itemName) {
+        int index = this.searchForItem(itemName, player.inventory);
+        if (index == -1) {
+            System.out.println("Cannot find "+itemName);
+            return;
+        }
+        this.itemsInRoom.add(player.inventory.get(index));
+        player.inventory.remove(player.inventory.get(index));
     }
 
     /**
@@ -245,6 +247,15 @@ public class Room {
             return;
         }
         this.itemsInRoom.get(index).move(player, this);
+    }
+
+    private void use(Player player, String itemName) {
+        int index = this.searchForItem(itemName, player.inventory);
+        if(index == -1) { 
+            System.out.println("Cannot find "+itemName);
+            return;
+        }
+        player.inventory.get(index).use(player, this);
     }
 
     /**
