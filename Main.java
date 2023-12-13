@@ -48,12 +48,13 @@ public class Main {
 
         boolean gameOver = false;
         player.currentRoom.displayRoom();
-        while(gameOver == false) {
+        while(player.score < 5) {
             System.out.println();
             System.out.print(">> ");
             userInput = getInput();
             inputAsList = parseInput(userInput);
             player.currentRoom.takeAction(player, inputAsList);
         }
+        System.out.println("GAME OVER");
     }
 }
