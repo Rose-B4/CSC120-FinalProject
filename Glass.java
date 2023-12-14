@@ -5,7 +5,7 @@ public class Glass extends Item {
     }
 
     public void onMove(Player player, Room room) {
-        player.score ++;
+        player.score++;
         System.out.println("The "+this.name+" falls to the ground and shatters\n"+player.score+" down");
         room.itemsInRoom.remove(this);
     }

@@ -52,7 +52,7 @@ public class Room {
      */
     public void takeAction(Player player, String[] action) {
         if(action.length > 2) {
-            System.out.println("Your input was too long, please try again with a 1 or 2 word input");
+            System.out.println("Your input was too long, please try again with a 1 or 2 word input\nType \"help\" for help");
             return;
         }
         if(action.length == 1) {
@@ -66,8 +66,11 @@ public class Room {
                 case "bag":
                     player.checkInventory();
                     break;
+                case "sleep":
+                    this.sleep(player);
+                    break;
                 default:
-                    System.out.println("Your action couldn't be recognized, please try again");
+                    System.out.println("Your action couldn't be recognized, please try again.\nType \"help\" for help");
                     break;
             }
         }
@@ -95,7 +98,7 @@ public class Room {
                     this.use(player, action[1]);
                     break;
                 default:
-                    System.out.println("Your action couldn't be recognized, please try again");
+                    System.out.println("Your action couldn't be recognized, please try again.\nType \"help\" for help");
                     break;
             }
         }
@@ -111,6 +114,7 @@ public class Room {
         System.out.println("  help (opens this menu)");
         System.out.println("  look (gives a description of the current room)");
         System.out.println("  bag (displays your current inventory)");
+        System.out.println("  sleep (go to sleep and finish your mission)");
         System.out.println("  go <direction> (allows you to move north, south, east, or west by one room)");
         System.out.println("  climb <direction> (allows you to climb either up or down)");
         System.out.println("  check <item name> (gives a description of the inputted item)");
@@ -131,6 +135,20 @@ public class Room {
     public void displayRoom() {
         System.out.println("You are in "+this.name);
         System.out.println(this.description);
+    }
+
+    public void sleep(Player player) {
+        if(player.score < 5) {
+            System.out.println("Can't sleep now, there are still things to break");
+        }
+        else if(!this.name.equals("The Cage")) {
+            System.out.println("You must return to your cage to go back to sleep");
+        }
+        else {
+            System.out.println("You have completed your mission and are now going back to sleep after a long strenuous day of work.");
+            System.out.println("Game Over");
+            Main.gameOver = true;
+        }
     }
 
     /**
@@ -191,7 +209,7 @@ public class Room {
             return;
         }
 
-        System.out.println("Cannot find "+itemName);
+        System.out.println("Cannot find "+itemName+"\nType \"help\" for help");
     }
 
     /**
@@ -213,7 +231,7 @@ public class Room {
             System.out.println("You picked up the "+itemName+" and put it in your inventory");
         }
         else {
-            System.out.println("Cannot take " +itemName);
+            System.out.println("Cannot take " +itemName+"\nType \"help\" for help");
         }
     }
 
@@ -226,7 +244,7 @@ public class Room {
     private void drop(Player player, String itemName) {
         int index = this.searchForItem(itemName, player.inventory);
         if (index == -1) {
-            System.out.println("Cannot find "+itemName);
+            System.out.println("Cannot find "+itemName+"\nType \"help\" for help");
             return;
         }
         this.itemsInRoom.add(player.inventory.get(index));
@@ -243,7 +261,7 @@ public class Room {
     private void move(Player player, String itemName) {
         int index = this.searchForItem(itemName, this.itemsInRoom);
         if(index == -1) { 
-            System.out.println("Cannot find "+itemName);
+            System.out.println("Cannot find "+itemName+"\nType \"help\" for help");
             return;
         }
         this.itemsInRoom.get(index).move(player, this);
@@ -252,7 +270,7 @@ public class Room {
     private void use(Player player, String itemName) {
         int index = this.searchForItem(itemName, player.inventory);
         if(index == -1) { 
-            System.out.println("Cannot find "+itemName);
+            System.out.println("Cannot find "+itemName+"\nType \"help\" for help");
             return;
         }
         player.inventory.get(index).use(player, this);

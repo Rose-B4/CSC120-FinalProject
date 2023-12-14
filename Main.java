@@ -4,6 +4,8 @@ public class Main {
     public static Scanner input = new Scanner(System.in);
     static String userInput;
     static String[] inputAsList;
+    public static boolean gameOver = false;
+    public static boolean returnToCage = false;
 
     /**
      * Allows the game to take the user's input
@@ -39,6 +41,7 @@ public class Main {
         "░█░░░░░█████░█░░░░░░░█░░░░█░░░░░█░░░█░░░░░░░█░░░█░█░░░█░████░░░███░░░░█░░\n"+
         "░█░░░░░█░░░█░█░░░░░░░█░░░░█░░░░░█░░░█░░░░░░░█░░█░░█░░░█░█░░░░░░░░░█░░░█░░\n"+
         "░░████░█░░░█░█████░█████░░░████░░███░░░░░░░░░██░█░░███░░█████░████░░░░█░░\n");
+        System.out.println("Type help for help.");
     }
 
     public static void main(String[] args) {
@@ -46,15 +49,17 @@ public class Main {
         Player player = new Player();
         RoomSetup.startSetup(player);
 
-        boolean gameOver = false;
         player.currentRoom.displayRoom();
-        while(player.score < 5) {
+        while(!gameOver) {
             System.out.println();
             System.out.print(">> ");
             userInput = getInput();
             inputAsList = parseInput(userInput);
             player.currentRoom.takeAction(player, inputAsList);
+            if(player.score == 5 && returnToCage == false) {
+                System.out.println("You have successfully destroyed all of the breakable objects.\nYou can now go back to your cage and go to sleep.");
+                returnToCage = true;
+            }
         }
-        System.out.println("GAME OVER");
     }
 }

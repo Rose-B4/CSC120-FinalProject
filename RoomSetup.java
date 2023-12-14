@@ -2,7 +2,7 @@ public class RoomSetup {
     public static void startSetup(Player player) {
         Room cage = new Room("The Cage",
             "There are thin metal bars blocking you exit to the south\nWithin the cage, there is a rug on the floor",
-            new Item[]{ new Item_StartingRug(), new Collectable("TEST", "THIS IS A TEST", "", "", "") }
+            new Item[]{ new Item_StartingRug() }
         );
 
         Room masterBedRoom = new Room("The Master Bedroom",
@@ -13,10 +13,10 @@ public class RoomSetup {
         Room masterBath = new Room("The Master Bathroom",
             "You see a large shower between a toilet and a small sink. There are some towels hanging from the sink that look climbable\nThere is also a bar of soap on the floor",
             new Item[]{ new Collectable("soap",
-            "A large bar of apple scented soap, doesn't look like it gets used much",
-            "The Living Room",
-            "west",
-            "You used the soap to loosen the door handle to the west")}
+                "A large bar of apple scented soap, doesn't look like it gets used much",
+                "The Living Room",
+                "west",
+                "You used the soap to loosen the door handle to the west")}
         );
 
         Room masterBathSink = new Room("Atop the sink",
@@ -34,7 +34,7 @@ public class RoomSetup {
         );
 
         Room livingRoom = new Room("The Living Room",
-            "A large room with some couches surrounding a coffee table with a few objects on top\nThere are doors to the north and south as well as a locked door to the west"
+            "A large room with some couches surrounding a coffee table with a few objects on top, the table looks low enough to climb\nThere are doors to the north and south as well as a jammed door to the west"
         );
 
         Room coffeeTable = new Room("Atop the coffee table",
@@ -44,7 +44,7 @@ public class RoomSetup {
 
         Room porch = new Room("The Porch",
             "You can see the line of trees just beyond your porch, you will never go there though because then you would have to touch the snow...\nThere is a rock on the ground and a door to the east",
-            new Item[] {new Collectable("rock", "A small, sharp rock", "The Kitchen", "none", "You threw the rock at the glass, it shattered")}
+            new Item[] {new Item_Rock() }
         );
 
         Room diningRoom = new Room("The Dining Room",
@@ -53,6 +53,15 @@ public class RoomSetup {
 
         Room kitchen = new Room("The Kitchen",
             "You can see large countertops lining the walls, too high for you to climb\nThere is a glass coffee pot on the counter and a door to the east"
+        );
+
+        Room bathRoom = new Room("The Bathroom", 
+            "You can see a bathtub in the corner as well as a medicine cabinet on the wall.\nThere seems to be something hanging from the cabinet that looks climbable and a door to the north"
+        );
+
+        Room medCabinet = new Room("Medicine Cabinet", 
+            "You see many small pill bottles, one of which seems to be made of glass.\nThere is a way to climb down from here",
+            new Item[] { new Glass("bottle", "A small bottle filled with white pills.")}
         );
 
         linkRoomsNS(cage, masterBedRoom);
@@ -67,8 +76,8 @@ public class RoomSetup {
         linkRoomsUD(coffeeTable, livingRoom);
         linkRoomsNS(livingRoom, diningRoom);
         linkRoomsWE(kitchen, diningRoom);
-        // linkRoomsNS(diningRoom, bathRoom);
-        // linkRoomsUD(bathroom, medCabinet);
+        linkRoomsNS(diningRoom, bathRoom);
+        linkRoomsUD(medCabinet, bathRoom);
         player.currentRoom = cage;
     }
 
