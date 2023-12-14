@@ -13,37 +13,37 @@ Here are the commands:
 # SPOILER ALERT
 
 - You start in the cage
--   Move rug to reveal key
--   Take key
--   Use key to unlock cage door
+  - Move rug to reveal key
+  - Take key
+  - Use key to unlock cage door
 - Go south to the master bedroom
--   Check mirror (or don't up to you)
+  - Check mirror (or don't up to you)
 - Go west into the mather bathroom
--   Take soap (it will be useful later)
+  - Take soap (it will be useful later)
 - Climb up the sink
--   Move cup to shatter it and get your first point
+  - Move cup to shatter it and get your first point
 - Climb down the sink
 - Go east back into the master bedroom
 - Go south into the front hall
 - Go west into the small bedroom
--   Move toys to shatter them and get your second point
+  - Move toys to shatter them and get your second point
 - Go east back to the front hall
 - Go south to the living room
--   Use soap to unstick the door handle to the porch
+  - Use soap to unstick the door handle to the porch
 - Go west to the porch
--   Take rock
+  - Take rock
 - Go east back to the living room
 - Climb up on the coffee table
--   Move mug to break it and get your third point
+  - Move mug to break it and get your third point
 - Climb down back to the living room
 - Go south to the dining room
 - Go west to the kitchen
--   Use rock to shatter the coffee machine and get your fourth point
+  - Use rock to shatter the coffee machine and get your fourth point
 - Go east back to the dining room
 - Go south to the bathroom
 - Climb up to the medicine cabinet
--   Move the pill bottle to shatter it getting your fifth and final point
+  - Move the pill bottle to shatter it getting your fifth and final point
 - Return to your cage
--   Climb down
--   Go north x5
+  - Climb down
+  - Go north x5
 - Go to sleep
