@@ -2,6 +2,7 @@ public class Collectable extends Item{
     String usedInRoom;
     String openDirection;
     String flavorTextOnUse;
+    boolean hasBeenUsed = false;
 
     public Collectable(String name, String description, String usedInRoom, String openDirection, String flavorText) {
         super(name, description);
@@ -18,6 +19,10 @@ public class Collectable extends Item{
         }
         if(canBeUsed == false) { 
             System.out.println("Cannot use "+this.name+" here");
+            return;
+        }
+        if(this.hasBeenUsed) {
+            System.out.println("You have already used "+this.name);
             return;
         }
         System.out.println(this.flavorTextOnUse);
@@ -41,5 +46,6 @@ public class Collectable extends Item{
                 room.canGoDown = true;
                 break;
         }
+        this.hasBeenUsed = true;
     }
 }
