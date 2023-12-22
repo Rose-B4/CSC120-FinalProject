@@ -120,6 +120,7 @@ public class Room {
         System.out.println("  check <item name> (gives a description of the inputted item)");
         System.out.println("  take <item name> (adds the inputted item to your inventory)");
         System.out.println("  move <item name> (allows you to move the inputted item out of the way)");
+        System.out.println("  use <item name> (allows you to use an item from your inventory)");
 
         System.out.println();
         System.out.println("Items in current room:");

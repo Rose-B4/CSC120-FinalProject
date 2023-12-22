@@ -5,7 +5,7 @@ public class Main {
     static String userInput;
     static String[] inputAsList;
     public static boolean gameOver = false;
-    public static boolean returnToCage = false;
+    public static boolean returnToCageText = false;
 
     /**
      * Allows the game to take the user's input
@@ -56,9 +56,9 @@ public class Main {
             userInput = getInput();
             inputAsList = parseInput(userInput);
             player.currentRoom.takeAction(player, inputAsList);
-            if(player.score == 5 && returnToCage == false) {
+            if(player.score == 5 && returnToCageText == false) {
                 System.out.println("You have successfully destroyed all of the breakable objects.\nYou can now go back to your cage and go to sleep.");
-                returnToCage = true;
+                returnToCageText = true;
             }
         }
     }

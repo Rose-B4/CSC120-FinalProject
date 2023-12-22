@@ -1,4 +1,10 @@
 public class RoomSetup {
+
+    /**
+     * This method is used for creating all of the rooms in the entire game.
+     * All rooms get instantiated, then linked together, then locked doors are specified, then the player's starting room is set.
+     * @param player the pointer to the player's character object so their location can be set to start the game
+     */
     public static void startSetup(Player player) {
         Room cage = new Room("The Cage",
             "There are thin metal bars blocking you exit to the south\nWithin the cage, there is a rug on the floor",
