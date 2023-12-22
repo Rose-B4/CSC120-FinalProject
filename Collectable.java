@@ -1,9 +1,21 @@
+/**
+ * The collectable subclass of item
+ * This is ued to create all items that the player can pickup and use
+ */
 public class Collectable extends Item{
     String usedInRoom;
     String openDirection;
     String flavorTextOnUse;
     boolean hasBeenUsed = false;
 
+    /**
+     * Default constructor for collectable
+     * @param name name of the item
+     * @param description description of item
+     * @param usedInRoom the name of the room the item can be used in
+     * @param openDirection the direction of the door that will open when this item is used
+     * @param flavorText the flavor text that will be displayed when the item is used
+     */
     public Collectable(String name, String description, String usedInRoom, String openDirection, String flavorText) {
         super(name, description);
         this.usedInRoom = usedInRoom;
@@ -12,6 +24,11 @@ public class Collectable extends Item{
 
     }
 
+    /**
+     * The method to use any given item
+     * Checks if this is the correct room, then if the item has already been used
+     * If both checks pass it unlocks the door it is set to unlock and marks the item as used
+     */
     public void use(Player player, Room room) {
         boolean canBeUsed = false;
         if(this.usedInRoom.equals(room.name)) {

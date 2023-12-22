@@ -1,3 +1,7 @@
+/**
+ * The Item super class
+ * This class works as both a way to add generic items to rooms, and as a parent to other items
+ */
 public class Item {
     public String name;
     public String description;
@@ -58,6 +62,12 @@ public class Item {
         throw new RuntimeException("Item without an overridden onMove() method was moved");
     }
 
+    /**
+     * Primarily made to be overridden by child classes
+     * If there is no override, it calls the move method
+     * @param player The player's character object
+     * @param room The current room
+     */
     public void use(Player player, Room room) {
         this.move(player, room);
     }

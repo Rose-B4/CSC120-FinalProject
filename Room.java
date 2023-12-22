@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * The room class, where almost all of the game logic is stored
+ * This class is passed the user's inputs from main and executes the necessary method to make that move happen
+ * Also contains most of the methods that are called from the previous statement
+ */
 public class Room {
     public String name;
     public String description;
